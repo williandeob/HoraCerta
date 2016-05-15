@@ -83,6 +83,7 @@
                 android:layout_marginTop="16dp"/>
 
             <TextView
+                android:id="@+id/register"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/criar_um_nova_conta_no_horacerta"

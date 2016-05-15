@@ -3,6 +3,7 @@ package br.com.ufg.inf.horacerta;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
@@ -99,6 +100,20 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
         mLoginFormView = findViewById(R.id.login_form);
         mProgressView = findViewById(R.id.login_progress);
+
+        final TextView register = (TextView) findViewById(R.id.register);
+        register.setOnClickListener(new OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                startRegisterActivity();
+            }
+        });
+    }
+
+    private void startRegisterActivity() {
+        Intent registerIntent = new Intent(this,RegisterActivity.class);
+        startActivity(registerIntent);
     }
 
     private void populateAutoComplete() {
