@@ -4,7 +4,6 @@ import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.util.Log;
-import android.widget.Toast;
 
 import org.apache.http.NameValuePair;
 
@@ -79,8 +78,6 @@ public class UtilConnection {
         Verifica se o device está conectado a rede
          */
         if (!isInternetAvalaible(context)) {
-            Toast toast = Toast.makeText(context, "Não foi possivel acessar a rede!", Toast.LENGTH_SHORT);
-            toast.show();
             return "errorConnection";
         }
 
