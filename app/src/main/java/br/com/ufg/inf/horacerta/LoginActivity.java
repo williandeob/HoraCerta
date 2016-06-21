@@ -31,6 +31,8 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
+
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
 
@@ -38,6 +40,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import dao.Persistencia;
+import dao.UsuarioDAO;
+import model.Usuario;
 import util.UtilConnection;
 
 import static android.Manifest.permission.READ_CONTACTS;
@@ -66,42 +71,59 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login);
-        // Set up the login form.
-        mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
-        populateAutoComplete();
 
-        mPasswordView = (EditText) findViewById(R.id.password);
-        mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
-                if (id == R.id.login || id == EditorInfo.IME_NULL) {
-                    attemptLogin();
-                    return true;
+        if(verificarSeJaPossuiUsuarioLogado()){
+            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+            startActivity(intent);
+            finish();
+
+        }else {
+            setContentView(R.layout.activity_login);
+            // Set up the login form.
+            mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
+            populateAutoComplete();
+
+            mPasswordView = (EditText) findViewById(R.id.password);
+            mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+                @Override
+                public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
+                    if (id == R.id.login || id == EditorInfo.IME_NULL) {
+                        attemptLogin();
+                        return true;
+                    }
+                    return false;
                 }
-                return false;
-            }
-        });
+            });
 
-        Button mEmailSignInButton = (Button) findViewById(R.id.email_sign_in_button);
-        mEmailSignInButton.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                attemptLogin();
-            }
-        });
+            Button mEmailSignInButton = (Button) findViewById(R.id.email_sign_in_button);
+            mEmailSignInButton.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    attemptLogin();
+                }
+            });
 
-        mLoginFormView = findViewById(R.id.login_form);
-        mProgressView = findViewById(R.id.login_progress);
+            mLoginFormView = findViewById(R.id.login_form);
+            mProgressView = findViewById(R.id.login_progress);
 
-        final TextView register = (TextView) findViewById(R.id.register);
-        register.setOnClickListener(new OnClickListener() {
+            final TextView register = (TextView) findViewById(R.id.register);
+            register.setOnClickListener(new OnClickListener() {
 
-            @Override
-            public void onClick(View v) {
-                startRegisterActivity();
-            }
-        });
+                @Override
+                public void onClick(View v) {
+                    startRegisterActivity();
+                }
+            });
+        }
+    }
+
+    private boolean verificarSeJaPossuiUsuarioLogado() {
+        UsuarioDAO usuarioDAO = new UsuarioDAO(getApplicationContext());
+        if(usuarioDAO.getUser()!= null){
+            return true;
+        }else{
+            return false;
+        }
     }
 
     private void startRegisterActivity() {
@@ -325,12 +347,12 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             String responseRequest;
 
             List<NameValuePair> parametros = new ArrayList<NameValuePair>();
-            parametros.add(new BasicNameValuePair("json", mEmail));
-            parametros.add(new BasicNameValuePair("outraKey", mPassword));;
+            parametros.add(new BasicNameValuePair("email", mEmail));
+            parametros.add(new BasicNameValuePair("senha", mPassword));
 
 
             try {
-                responseRequest = UtilConnection.buildRequest("statusService/getStatus", "POST", parametros, getApplicationContext());
+                responseRequest = UtilConnection.buildRequest("statusService/login", "POST", parametros, getApplicationContext());
             }catch (IOException ex){
                 responseRequest = "errorException";
             }
@@ -362,8 +384,14 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                     toast.show();
                     break;
                 default: //sucesso
+
                     toast = Toast.makeText(getApplicationContext(), responseRequest, Toast.LENGTH_LONG);
                     toast.show();
+                    Gson gson = new Gson();
+
+                    Persistencia usuarioDAO = new UsuarioDAO(getApplicationContext());
+                    usuarioDAO.insert(gson.fromJson(responseRequest, Usuario.class));
+
                     Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                     startActivity(intent);
                     finish();
