@@ -17,9 +17,9 @@ public class Usuario {
     private Usuario() {
     }
 
-    public static Usuario getUsuarioInstance(){
+    public static synchronized Usuario getUsuarioInstance(){
         if(usuario == null){
-            return new Usuario();
+            usuario = new Usuario();
         }
         return usuario;
     }

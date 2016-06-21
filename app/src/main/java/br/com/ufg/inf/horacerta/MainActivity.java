@@ -19,6 +19,8 @@ import android.view.ViewGroup;
 
 import android.widget.TextView;
 
+import model.Usuario;
+
 public class MainActivity extends AppCompatActivity {
 
     /**
@@ -116,13 +118,20 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
-            View rootView = inflater.inflate(R.layout.fragment_main, container, false);
-            TextView textView = (TextView) rootView.findViewById(R.id.section_label);
+
+            View rootView = null;
             if(getArguments().getInt(ARG_SECTION_NUMBER) == 0) {
+                rootView = inflater.inflate(R.layout.fragment_main, container, false);
+                TextView textView = (TextView) rootView.findViewById(R.id.section_label);
                 textView.setText("Lista de medicamentos do usuário");
             }else{
-                textView.setText("Perfil do usuário logado");
+                rootView = inflater.inflate(R.layout.fragment_user, container, false);
+                TextView nameUser = (TextView) rootView.findViewById(R.id.name_user);
+                nameUser.setText(Usuario.getUsuarioInstance().getNome());
+                TextView emailUser = (TextView) rootView.findViewById(R.id.email_user);
+                emailUser.setText(Usuario.getUsuarioInstance().getEmail());
             }
+
             return rootView;
         }
     }

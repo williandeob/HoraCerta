@@ -119,7 +119,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
     private boolean verificarSeJaPossuiUsuarioLogado() {
         UsuarioDAO usuarioDAO = new UsuarioDAO(getApplicationContext());
-        if(usuarioDAO.getUser()!= null){
+        if(usuarioDAO.getUser().getId() != null){
             return true;
         }else{
             return false;
