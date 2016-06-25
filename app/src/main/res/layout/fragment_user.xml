@@ -18,7 +18,7 @@
             android:id="@+id/image_user"
             android:layout_width="80dp"
             android:layout_height="80dp"
-            android:src="@android:drawable/ic_menu_report_image"
+            android:src="@drawable/ic_account_circle_black_48dp"
             android:paddingRight="16dp"/>
 
         <TextView
@@ -46,6 +46,6 @@
     <View   android:id="@+id/Divisor1"
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="#a6a2a1" />
+            android:background="#c8c6c1c1" />
 
 </LinearLayout>

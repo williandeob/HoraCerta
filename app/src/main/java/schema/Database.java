@@ -17,10 +17,20 @@ public class Database extends SQLiteOpenHelper {
                     "ID INTEGER PRIMARY KEY NOT NULL, " +
                     "EMAIL TEXT NOT NULL, "+
                     "NOME TEXT NOT NULL, "+
-                    "SENHA TEXT NOT NULL);";
+                    "SENHA TEXT NOT NULL);"+
+
+            "CREATE TABLE IF NOT EXISTS MEDICAMENTO ("+
+                    "ID INTEGER PRIMARY KEY NOT NULL, "+
+                    "DESCRICAO_DO_USO TEXT, "+
+                    "DT_INICIO TEXT NOT NULL, "+
+                    "IMAGEM BLOB, "+
+                    "INTERVALO_EM_MINUTOS INTEGER NOT NULL, "+
+                    "NOME TEXT NOT NULL, "+
+                    "USUARIO_ID INTEGER PRIMARY KEY NOT NULL);";
+
 
     private static final String SQL_DROP_TABLES =
-            "DROP TABLE IF EXISTS USUARIO";
+            "DROP TABLE IF EXISTS USUARIO, MEDICAMENTO;";
 
     public Database (Context context){
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
