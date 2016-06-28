@@ -23,11 +23,13 @@
             android:id="@+id/medicamentoImagem"
             android:layout_width="match_parent"
             android:layout_height="150dp"
-            android:src="@android:drawable/ic_menu_gallery"/>
+            android:src="@drawable/ic_image_black_48dp"
+            />
 
         <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp">
 
             <EditText
                 android:id="@+id/medicamentoNome"
@@ -54,6 +56,50 @@
                 android:singleLine="false"/>
 
         </android.support.design.widget.TextInputLayout>
+
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <EditText
+                android:id="@+id/intervalo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Intervalo de uso em minutos"
+                android:inputType="number"/>
+
+        </android.support.design.widget.TextInputLayout>
+
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@android:drawable/ic_menu_recent_history"/>
+
+            <TextView
+                android:id="@+id/btnDtInicio"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="7dp"
+                android:layout_marginLeft="15dp"
+                android:textStyle="bold"
+                android:text="Data"/>
+
+            <TextView
+                android:id="@+id/btnHrInicio"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="7dp"
+                android:layout_marginLeft="100dp"
+                android:textStyle="bold"
+                android:text="Hora"/>
+        </LinearLayout>
 
     </LinearLayout>
 
