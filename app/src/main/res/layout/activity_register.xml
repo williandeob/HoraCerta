@@ -21,13 +21,13 @@
         android:visibility="gone"/>
 
     <ScrollView
-        android:id="@+id/login_form"
+        android:id="@+id/register_form"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
 
         <LinearLayout
-            android:id="@+id/register_form"
+            android:id="@+id/register"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
@@ -45,7 +45,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Use o email cadastrado para realizar login no aplicativo"
+                android:text="Use o username cadastrado para realizar login no aplicativo"
                 android:textAlignment="center"
                 android:layout_marginTop="16dp"/>
 
@@ -53,6 +53,22 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="30dp"
+                >
+
+                <EditText
+                    android:id="@+id/user_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Username"
+                    android:inputType="text"
+                    android:maxLines="1"
+                    android:singleLine="true"/>
+
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 >
 
                 <EditText
@@ -71,7 +87,7 @@
                 android:layout_height="wrap_content">
 
                 <EditText
-                    android:id="@+id/user_name"
+                    android:id="@+id/nome"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/user_name"

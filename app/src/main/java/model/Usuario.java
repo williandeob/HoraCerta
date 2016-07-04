@@ -11,8 +11,9 @@ public class Usuario {
 
     private Long id;
     private String nome;
+    private String userName;
     private String email;
-    private String senha;
+    private String password;
 
     private Usuario() {
     }
@@ -36,6 +37,14 @@ public class Usuario {
         return nome;
     }
 
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
     public void setNome(String nome) {
         this.nome = nome;
     }
@@ -48,12 +57,11 @@ public class Usuario {
         this.email = email;
     }
 
-    public String getSenha() {
-        return senha;
+    public String getPassword() {
+        return password;
     }
 
-    public void setSenha(String senha) {
-        this.senha = senha;
+    public void setPassword(String password) {
+        this.password = password;
     }
-
 }

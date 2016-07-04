@@ -3,7 +3,6 @@ package br.com.ufg.inf.horacerta;
 import android.content.Intent;
 import android.support.design.widget.TabLayout;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
@@ -18,8 +17,14 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import android.widget.ListView;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+import model.Medicamento;
 import model.Usuario;
 
 public class MainActivity extends AppCompatActivity {
@@ -61,7 +66,7 @@ public class MainActivity extends AppCompatActivity {
         fabNovoMedicamento.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(getApplicationContext(), CadastroMedicamento.class);
+                Intent intent = new Intent(getApplicationContext(), CadastroMedicamentoActivity.class);
                 startActivity(intent);
             }
         });
@@ -123,8 +128,23 @@ public class MainActivity extends AppCompatActivity {
             View rootView = null;
             if(getArguments().getInt(ARG_SECTION_NUMBER) == 0) {
                 rootView = inflater.inflate(R.layout.fragment_main, container, false);
-                TextView textView = (TextView) rootView.findViewById(R.id.section_label);
-                textView.setText("Lista de medicamentos do usuário");
+
+               /* MedicamentoDAO medicamentoDAO = new MedicamentoDAO(getContext());
+                List<Medicamento>listaDoBanco = medicamentoDAO.findAll();*/
+
+                List<Medicamento> listaDeMedicamentos = new ArrayList<Medicamento>();
+                Medicamento medicamento = new Medicamento();
+                medicamento.setUsuario(Usuario.getUsuarioInstance());
+                medicamento.setId((long) 1);
+                medicamento.setNome("Aradois");
+                medicamento.setDtInicio(new Date());
+                medicamento.setDescricaoDoUso("Tomar 01 comprimido com água");
+                medicamento.setIntervaloEmMinutos(120);
+                listaDeMedicamentos.add(medicamento);
+
+                ListView lv = (ListView)rootView.findViewById(R.id.listaDeMedicamentos);
+                lv.setAdapter(new AdapterListViewMedicamentos(getContext(), listaDeMedicamentos));
+
             }else{
                 rootView = inflater.inflate(R.layout.fragment_user, container, false);
                 TextView nameUser = (TextView) rootView.findViewById(R.id.name_user);

@@ -26,15 +26,17 @@ public class UsuarioDAO implements Persistencia<Usuario> {
         ContentValues values = new ContentValues();
         values.put("ID", object.getId());
         values.put("NOME", object.getNome());
+        values.put("USERNAME", object.getUserName());
         values.put("EMAIL", object.getEmail());
-        values.put("SENHA", object.getSenha());
+        values.put("PASSWORD", object.getPassword());
         db.insert("USUARIO", null, values);
 
         Usuario usuario = Usuario.getUsuarioInstance();
         usuario.setId(object.getId());
         usuario.setNome(object.getNome());
+        usuario.setUserName(object.getUserName());
         usuario.setEmail(object.getEmail());
-        usuario.setSenha(object.getSenha());
+        usuario.setPassword(object.getPassword());
     }
 
     @Override
@@ -59,12 +61,14 @@ public class UsuarioDAO implements Persistencia<Usuario> {
         Cursor cursor = db.query("USUARIO",null, null, null, null, null, null);
         if(cursor.moveToFirst()) {
             usuario.setId(cursor.getLong(cursor.getColumnIndexOrThrow("ID")));
-            usuario.setEmail(cursor.getString(cursor.getColumnIndexOrThrow("EMAIL")));
             usuario.setNome(cursor.getString(cursor.getColumnIndexOrThrow("NOME")));
-            usuario.setSenha(cursor.getString(cursor.getColumnIndexOrThrow("SENHA")));
-            return usuario;
-        }else {
-            return null;
+            usuario.setUserName(cursor.getString(cursor.getColumnIndexOrThrow("USERNAME")));
+            usuario.setEmail(cursor.getString(cursor.getColumnIndexOrThrow("EMAIL")));
+            usuario.setPassword(cursor.getString(cursor.getColumnIndexOrThrow("PASSWORD")));
         }
+
+        cursor.close();
+        return usuario;
+
     }
 }

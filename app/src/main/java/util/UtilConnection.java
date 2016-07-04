@@ -6,6 +6,7 @@ import android.net.NetworkInfo;
 import android.util.Log;
 
 import org.apache.http.NameValuePair;
+import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -73,7 +74,7 @@ public class UtilConnection {
         return result.toString();
     }
 
-    public static String buildRequest(String urlResource, String metodo, List<NameValuePair> parametros, Context context) throws IOException {
+    public static String buildRequest(String urlResource, String metodo, JSONObject parametros, Context context) throws IOException {
         /*
         Verifica se o device está conectado a rede
          */
@@ -92,7 +93,7 @@ public class UtilConnection {
             conn.setRequestMethod(metodo);
             conn.setDoInput(true);
             conn.setDoOutput(true);/* define if have data to posting*/
-            conn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+            conn.setRequestProperty("Content-Type", "application/json");
             conn.setRequestProperty( "Accept", "*/*" );
             if("GET".equals(metodo)){
 
@@ -101,7 +102,7 @@ public class UtilConnection {
                 OutputStream os = conn.getOutputStream();
                 BufferedWriter writer = new BufferedWriter(
                         new OutputStreamWriter(os, "UTF-8"));
-                writer.write(getQuery(parametros));
+                writer.write(parametros.toString());
                 writer.flush();
                 writer.close();
                 os.close();

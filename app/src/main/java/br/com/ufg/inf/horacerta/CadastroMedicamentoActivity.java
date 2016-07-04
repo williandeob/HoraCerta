@@ -15,13 +15,22 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.DatePicker;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
+import java.io.ByteArrayOutputStream;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
-public class CadastroMedicamento extends AppCompatActivity{
+import dao.MedicamentoDAO;
+import model.Medicamento;
+import model.Usuario;
+
+public class CadastroMedicamentoActivity extends AppCompatActivity{
 
     TextView btnHrInicio;
     TextView btnDtInicio;
@@ -80,7 +89,57 @@ public class CadastroMedicamento extends AppCompatActivity{
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_salvar) {
-            return true;
+            Toast toast;
+            ImageView medicamentoImagem = (ImageView) findViewById(R.id.medicamentoImagem);
+            EditText nomeMedicamento = (EditText) findViewById(R.id.medicamentoNome);
+            EditText medicamentoDescricaoUso = (EditText) findViewById(R.id.medicamentoDescricaoUso);
+            EditText intervalo = (EditText) findViewById(R.id.intervalo);
+            TextView btnDtInicio = (TextView) findViewById(R.id.btnDtInicio);
+            TextView btnHrInicio = (TextView) findViewById(R.id.btnHrInicio);
+
+            if("".equals(nomeMedicamento.getText().toString().trim())){
+                toast = Toast.makeText(getApplicationContext(), "Informe o nome do medicamento", Toast.LENGTH_LONG);
+                toast.show();
+                return false;
+            }else if("".equals(intervalo.getText().toString().trim())) {
+                toast = Toast.makeText(getApplicationContext(), "Informe o intervalo do usao do medicamento", Toast.LENGTH_LONG);
+                toast.show();
+                return false;
+            }else if ("Data".equals(btnDtInicio.getText().toString().trim()) || "Hora".equals(btnHrInicio.getText().toString().trim())){
+                toast = Toast.makeText(getApplicationContext(), "Informe a data e hora do início do uso do medicamento", Toast.LENGTH_LONG);
+                toast.show();
+                return false;
+            }else {
+                Medicamento novoMedicamento = new Medicamento();
+                novoMedicamento.setUsuario(Usuario.getUsuarioInstance());
+
+                medicamentoImagem.setDrawingCacheEnabled(true);
+                medicamentoImagem.buildDrawingCache();
+                Bitmap imageMedicamentoBM = medicamentoImagem.getDrawingCache();
+                ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                imageMedicamentoBM.compress(Bitmap.CompressFormat.PNG, 100, stream);
+                novoMedicamento.setImagem(stream.toByteArray());
+
+                novoMedicamento.setNome(nomeMedicamento.getText().toString().trim());
+                novoMedicamento.setDescricaoDoUso(medicamentoDescricaoUso.getText().toString().trim());
+                novoMedicamento.setIntervaloEmMinutos(Integer.parseInt(intervalo.getText().toString().trim()));
+
+                String dataInicioUsoMedicamento = btnDtInicio.getText().toString().trim()+" "+btnHrInicio.getText().toString().trim()+":00";
+                String pattern = "MM/dd/yyyy HH:mm:ss";
+                SimpleDateFormat format = new SimpleDateFormat(pattern);
+                try {
+                    novoMedicamento.setDtInicio(format.parse(dataInicioUsoMedicamento));
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+
+                MedicamentoDAO medicamentoDAO = new MedicamentoDAO(getApplicationContext());
+                medicamentoDAO.insert(novoMedicamento);
+                toast = Toast.makeText(getApplicationContext(), "Medicamento salvo com sucesso", Toast.LENGTH_LONG);
+                toast.show();
+
+                return true;
+            }
         }
 
         return super.onOptionsItemSelected(item);
@@ -106,7 +165,7 @@ public class CadastroMedicamento extends AppCompatActivity{
         int day = c.get(Calendar.DAY_OF_MONTH);
 
         DatePickerDialog mDateTimePicker;
-        mDateTimePicker = new DatePickerDialog(CadastroMedicamento.this, new DatePickerDialog.OnDateSetListener() {
+        mDateTimePicker = new DatePickerDialog(CadastroMedicamentoActivity.this, new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker datePicker, int year, int month, int day) {
                 btnDtInicio.setText(day+"/"+(month+1)+"/"+year);
@@ -122,7 +181,7 @@ public class CadastroMedicamento extends AppCompatActivity{
         int hour = mcurrentTime.get(Calendar.HOUR_OF_DAY);
         int minute = mcurrentTime.get(Calendar.MINUTE);
         TimePickerDialog mTimePicker;
-        mTimePicker = new TimePickerDialog(CadastroMedicamento.this, new TimePickerDialog.OnTimeSetListener() {
+        mTimePicker = new TimePickerDialog(CadastroMedicamentoActivity.this, new TimePickerDialog.OnTimeSetListener() {
             @Override
             public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
                 btnHrInicio.setText( selectedHour + ":" + selectedMinute);
