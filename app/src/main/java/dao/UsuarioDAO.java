@@ -24,19 +24,25 @@ public class UsuarioDAO implements Persistencia<Usuario> {
         Database schema = new Database(this.context);
         SQLiteDatabase db = schema.getWritableDatabase();
         ContentValues values = new ContentValues();
-        values.put("ID", object.getId());
-        values.put("NOME", object.getNome());
-        values.put("USERNAME", object.getUserName());
-        values.put("EMAIL", object.getEmail());
-        values.put("PASSWORD", object.getPassword());
-        db.insert("USUARIO", null, values);
 
-        Usuario usuario = Usuario.getUsuarioInstance();
-        usuario.setId(object.getId());
-        usuario.setNome(object.getNome());
-        usuario.setUserName(object.getUserName());
-        usuario.setEmail(object.getEmail());
-        usuario.setPassword(object.getPassword());
+        try {
+
+            values.put("ID", object.getId());
+            values.put("NOME", object.getNome());
+            values.put("USERNAME", object.getUserName());
+            values.put("EMAIL", object.getEmail());
+            values.put("PASSWORD", object.getPassword());
+            db.insert("USUARIO", null, values);
+
+            Usuario usuario = Usuario.getUsuarioInstance();
+            usuario.setId(object.getId());
+            usuario.setNome(object.getNome());
+            usuario.setUserName(object.getUserName());
+            usuario.setEmail(object.getEmail());
+            usuario.setPassword(object.getPassword());
+        }finally {
+            db.close();
+        }
     }
 
     @Override
@@ -59,16 +65,18 @@ public class UsuarioDAO implements Persistencia<Usuario> {
         Database schema = new Database(this.context);
         SQLiteDatabase db = schema.getReadableDatabase();
         Cursor cursor = db.query("USUARIO",null, null, null, null, null, null);
-        if(cursor.moveToFirst()) {
-            usuario.setId(cursor.getLong(cursor.getColumnIndexOrThrow("ID")));
-            usuario.setNome(cursor.getString(cursor.getColumnIndexOrThrow("NOME")));
-            usuario.setUserName(cursor.getString(cursor.getColumnIndexOrThrow("USERNAME")));
-            usuario.setEmail(cursor.getString(cursor.getColumnIndexOrThrow("EMAIL")));
-            usuario.setPassword(cursor.getString(cursor.getColumnIndexOrThrow("PASSWORD")));
+        try {
+            if (cursor.moveToFirst()) {
+                usuario.setId(cursor.getLong(cursor.getColumnIndexOrThrow("ID")));
+                usuario.setNome(cursor.getString(cursor.getColumnIndexOrThrow("NOME")));
+                usuario.setUserName(cursor.getString(cursor.getColumnIndexOrThrow("USERNAME")));
+                usuario.setEmail(cursor.getString(cursor.getColumnIndexOrThrow("EMAIL")));
+                usuario.setPassword(cursor.getString(cursor.getColumnIndexOrThrow("PASSWORD")));
+            }
+        }finally {
+            cursor.close();
+            db.close();
+            return usuario;
         }
-
-        cursor.close();
-        return usuario;
-
     }
 }

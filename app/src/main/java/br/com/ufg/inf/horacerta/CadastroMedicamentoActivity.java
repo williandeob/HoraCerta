@@ -125,20 +125,21 @@ public class CadastroMedicamentoActivity extends AppCompatActivity{
                 novoMedicamento.setIntervaloEmMinutos(Integer.parseInt(intervalo.getText().toString().trim()));
 
                 String dataInicioUsoMedicamento = btnDtInicio.getText().toString().trim()+" "+btnHrInicio.getText().toString().trim()+":00";
-                String pattern = "MM/dd/yyyy HH:mm:ss";
+                String pattern = "dd/MM/yyyy HH:mm:ss";
                 SimpleDateFormat format = new SimpleDateFormat(pattern);
                 try {
                     novoMedicamento.setDtInicio(format.parse(dataInicioUsoMedicamento));
+
+                    MedicamentoDAO medicamentoDAO = new MedicamentoDAO(getApplicationContext());
+                    medicamentoDAO.insert(novoMedicamento);
+                    toast = Toast.makeText(getApplicationContext(), "Medicamento salvo com sucesso", Toast.LENGTH_LONG);
+                    toast.show();
+
+                    return true;
+
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }
-
-                MedicamentoDAO medicamentoDAO = new MedicamentoDAO(getApplicationContext());
-                medicamentoDAO.insert(novoMedicamento);
-                toast = Toast.makeText(getApplicationContext(), "Medicamento salvo com sucesso", Toast.LENGTH_LONG);
-                toast.show();
-
-                return true;
             }
         }
 
@@ -152,7 +153,6 @@ public class CadastroMedicamentoActivity extends AppCompatActivity{
         if(requestCode == 0 && resultCode == RESULT_OK ) {
             Bitmap bp = (Bitmap) data.getExtras().get("data");
             ImageView imagemMedicamento = (ImageView)findViewById(R.id.medicamentoImagem);
-            imagemMedicamento.getLayoutParams().height = (int) getResources().getDimension(R.dimen.imageview_height);
             imagemMedicamento.setImageBitmap(bp);
         }
     }

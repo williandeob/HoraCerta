@@ -382,15 +382,27 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
                     toast = Toast.makeText(getApplicationContext(), responseRequest, Toast.LENGTH_LONG);
                     toast.show();
-                    Gson gson = new Gson();
 
-                    Persistencia usuarioDAO = new UsuarioDAO(getApplicationContext());
-                    usuarioDAO.insert(gson.fromJson(responseRequest, Usuario.class));
+                    try {
 
-                    Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-                    startActivity(intent);
-                    finish();
-                    break;
+                        JSONObject object = new JSONObject(responseRequest);
+                        Persistencia usuarioDAO = new UsuarioDAO(getApplicationContext());
+
+                        Usuario usuario = Usuario.getUsuarioInstance();
+                        usuario.setId(object.getJSONObject("usuario").getLong("id"));
+                        usuario.setNome(object.getJSONObject("usuario").getString("nome"));
+                        usuario.setEmail(object.getJSONObject("usuario").getString("email"));
+                        usuario.setUserName(this.mUserName);
+                        usuario.setPassword(this.mPassword);
+                        usuarioDAO.insert(usuario);
+
+                        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                        startActivity(intent);
+                        finish();
+                        break;
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
             }
         }
 

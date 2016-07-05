@@ -12,6 +12,7 @@ import java.util.Date;
 import java.util.List;
 
 import model.Medicamento;
+import model.Usuario;
 import schema.Database;
 
 /**
@@ -26,21 +27,24 @@ public class MedicamentoDAO  implements Persistencia<Medicamento>{
 
     @Override
     public void insert(Medicamento object) {
-        String pattern = "MM-dd-yyyy HH:mm:ss";
+        String pattern = "dd/MM/yyyy HH:mm:ss";
         SimpleDateFormat format = new SimpleDateFormat(pattern);
 
         Database schema = new Database(this.context);
         SQLiteDatabase db = schema.getWritableDatabase();
         ContentValues values = new ContentValues();
+        try {
 
-        values.put("ID",(findLastId()+1));
-        values.put("NOME", object.getNome());
-        values.put("IMAGEM", object.getImagem());
-        values.put("DESCRICAO_DO_USO", object.getDescricaoDoUso());
-        values.put("DT_INICIO", format.format(object.getDtInicio()));
-        values.put("INTERVALO_EM_MINUTOS", object.getIntervaloEmMinutos());
-        values.put("USUARIO_ID", object.getUsuario().getId());
-        db.insert("MEDICAMENTO", null, values);
+            values.put("NOME", object.getNome());
+            values.put("IMAGEM", object.getImagem());
+            values.put("DESCRICAO_DO_USO", object.getDescricaoDoUso());
+            values.put("DT_INICIO", format.format(object.getDtInicio()));
+            values.put("INTERVALO_EM_MINUTOS", object.getIntervaloEmMinutos());
+            values.put("USUARIO_ID", object.getUsuario().getId());
+            db.insert("MEDICAMENTO", null, values);
+        }finally {
+            db.close();
+        }
 
     }
 
@@ -58,37 +62,46 @@ public class MedicamentoDAO  implements Persistencia<Medicamento>{
     public List<Medicamento> findAll() {
         Database schema = new Database(this.context);
         SQLiteDatabase db = schema.getReadableDatabase();
-        Cursor cursor = db.query("Medicamento",null, null, null, null, null, null);
+        Cursor cursor = db.query("MEDICAMENTO",null, null, null, null, null, null);
+
         if(cursor.getCount() == 0){
+            cursor.close();
+            db.close();
             return null;
         }else {
 
-            List<Medicamento> listaMedicamentosReturn = new ArrayList<Medicamento>();
+            List<Medicamento> listaMedicamentosReturn = null;
 
-            for (int i = 0; i < cursor.getCount(); i++) {
-                cursor.moveToPosition(i);
-                Medicamento medicamento = new Medicamento();
-                medicamento.setId(cursor.getLong(cursor.getColumnIndex("ID")));
-                medicamento.setNome(cursor.getString(cursor.getColumnIndex("NOME")));
-                medicamento.setImagem(cursor.getBlob(cursor.getColumnIndex("IMAGEM")));
-                medicamento.setDescricaoDoUso(cursor.getString(cursor.getColumnIndex("DESCRICAO_DO_USO")));
-                medicamento.setIntervaloEmMinutos(cursor.getInt(cursor.getColumnIndex("INTERVALO_EM_MINUTOS")));
+            try {
+                listaMedicamentosReturn = new ArrayList<Medicamento>();
 
-                String dataString = cursor.getString(cursor.getColumnIndex("DT_INICIO"));
-                String pattern = "MM/dd/yyyy HH:mm:ss";
-                SimpleDateFormat format = new SimpleDateFormat(pattern);
-                Date date = null;
-                try {
+                for (int i = 0; i < cursor.getCount(); i++) {
+                    cursor.moveToPosition(i);
+                    Medicamento medicamento = new Medicamento();
+                    medicamento.setId(cursor.getLong(cursor.getColumnIndex("ID")));
+                    medicamento.setNome(cursor.getString(cursor.getColumnIndex("NOME")));
+                    medicamento.setImagem(cursor.getBlob(cursor.getColumnIndex("IMAGEM")));
+                    medicamento.setDescricaoDoUso(cursor.getString(cursor.getColumnIndex("DESCRICAO_DO_USO")));
+                    medicamento.setIntervaloEmMinutos(cursor.getInt(cursor.getColumnIndex("INTERVALO_EM_MINUTOS")));
+                    medicamento.setUsuario(Usuario.getUsuarioInstance());
+
+                    String dataString = cursor.getString(cursor.getColumnIndex("DT_INICIO"));
+                    String pattern = "dd/MM/yyyy HH:mm:ss";
+                    SimpleDateFormat format = new SimpleDateFormat(pattern);
+                    Date date = null;
                     date = format.parse(dataString);
-                } catch (ParseException e) {
-                    e.printStackTrace();
+
+                    medicamento.setDtInicio(date);
+
+                    listaMedicamentosReturn.add(medicamento);
                 }
-                medicamento.setDtInicio(date);
-
-                listaMedicamentosReturn.add(medicamento);
+            }catch (ParseException e) {
+                e.printStackTrace();
+            }finally {
+                cursor.close();
+                db.close();
+                return listaMedicamentosReturn;
             }
-
-            return listaMedicamentosReturn;
         }
     }
 

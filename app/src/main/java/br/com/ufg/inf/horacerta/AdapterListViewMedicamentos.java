@@ -1,6 +1,8 @@
 package br.com.ufg.inf.horacerta;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -64,7 +66,14 @@ public class AdapterListViewMedicamentos extends BaseAdapter{
         //e define os valores nos itens.
         Medicamento item = itens.get(position);
         itemHolder.nome.setText(item.getNome());
-        itemHolder.image.setImageResource(R.mipmap.ic_launcher);
+        if(item.getImagem() == null) {
+            itemHolder.image.setImageResource(R.mipmap.ic_launcher);
+        }else{
+            Bitmap bitmap = BitmapFactory.decodeByteArray(item.getImagem(), 0, item.getImagem().length);
+            itemHolder.image.getLayoutParams().height = 300;
+            itemHolder.image.getLayoutParams().width = 300;
+            itemHolder.image.setImageBitmap(bitmap);
+        }
 
         //retorna a view com as informações
         return convertView;

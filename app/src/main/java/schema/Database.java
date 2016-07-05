@@ -9,25 +9,27 @@ import android.database.sqlite.SQLiteOpenHelper;
  */
 public class Database extends SQLiteOpenHelper {
 
-    private static final int DATABASE_VERSION = 3;
+    private static final int DATABASE_VERSION = 1;
     private static final String DATABASE_NAME = "HoraCerta.db";
 
-    private static final String DICTIONARY_TABLE_CREATE =
+    private static final String DICTIONARY_TABLE_CREATE_USUARIO =
             "CREATE TABLE IF NOT EXISTS USUARIO (" +
                     "ID INTEGER PRIMARY KEY NOT NULL, " +
                     "NOME TEXT NOT NULL, "+
                     "USERNAME TEXT NOT NULL, "+
                     "EMAIL TEXT NOT NULL, "+
-                    "PASSWORD TEXT NOT NULL);"+
+                    "PASSWORD TEXT NOT NULL);";
 
+    private static final String DICTIONARY_TABLE_CREATE_MEDICAMEENTO=
             "CREATE TABLE IF NOT EXISTS MEDICAMENTO ("+
                     "ID INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "+
                     "DESCRICAO_DO_USO TEXT, "+
-                    "DT_INICIO TEXT NOT NULL, "+
+                    "DT_INICIO DATETIME NOT NULL, "+
                     "IMAGEM BLOB, "+
                     "INTERVALO_EM_MINUTOS INTEGER NOT NULL, "+
                     "NOME TEXT NOT NULL, "+
-                    "USUARIO_ID INTEGER PRIMARY KEY NOT NULL);";
+                    "USUARIO_ID INTEGER NOT NULL," +
+                    "FOREIGN KEY(USUARIO_ID) REFERENCES USUARIO(ID));";
 
 
     private static final String SQL_DROP_TABLES =
@@ -40,7 +42,8 @@ public class Database extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        db.execSQL(DICTIONARY_TABLE_CREATE);
+        db.execSQL(DICTIONARY_TABLE_CREATE_USUARIO);
+        db.execSQL(DICTIONARY_TABLE_CREATE_MEDICAMEENTO);
     }
 
     @Override

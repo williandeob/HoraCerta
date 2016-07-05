@@ -27,7 +27,7 @@ import java.util.List;
  */
 
 public class UtilConnection {
-    private static String pathApplicationRequest = "http://192.168.0.168:8080/SlumServer/slum/";
+    private static String pathApplicationRequest = "http://ec2-54-233-118-201.sa-east-1.compute.amazonaws.com/SlumServer/slum/";
 
     private static boolean isInternetAvalaible(Context context) {
         ConnectivityManager connMgr = (ConnectivityManager)
