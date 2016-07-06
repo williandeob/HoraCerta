@@ -63,17 +63,9 @@ public class MedicamentoDAO  implements Persistencia<Medicamento>{
         Database schema = new Database(this.context);
         SQLiteDatabase db = schema.getReadableDatabase();
         Cursor cursor = db.query("MEDICAMENTO",null, null, null, null, null, null);
-
-        if(cursor.getCount() == 0){
-            cursor.close();
-            db.close();
-            return null;
-        }else {
-
-            List<Medicamento> listaMedicamentosReturn = null;
+        List<Medicamento> listaMedicamentosReturn = new ArrayList<Medicamento>();
 
             try {
-                listaMedicamentosReturn = new ArrayList<Medicamento>();
 
                 for (int i = 0; i < cursor.getCount(); i++) {
                     cursor.moveToPosition(i);
@@ -102,7 +94,6 @@ public class MedicamentoDAO  implements Persistencia<Medicamento>{
                 db.close();
                 return listaMedicamentosReturn;
             }
-        }
     }
 
     public long findLastId(){

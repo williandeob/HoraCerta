@@ -25,6 +25,7 @@ import java.io.ByteArrayOutputStream;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 
 import dao.MedicamentoDAO;
 import model.Medicamento;
@@ -100,25 +101,30 @@ public class CadastroMedicamentoActivity extends AppCompatActivity{
             if("".equals(nomeMedicamento.getText().toString().trim())){
                 toast = Toast.makeText(getApplicationContext(), "Informe o nome do medicamento", Toast.LENGTH_LONG);
                 toast.show();
-                return false;
+
             }else if("".equals(intervalo.getText().toString().trim())) {
                 toast = Toast.makeText(getApplicationContext(), "Informe o intervalo do usao do medicamento", Toast.LENGTH_LONG);
                 toast.show();
-                return false;
+
             }else if ("Data".equals(btnDtInicio.getText().toString().trim()) || "Hora".equals(btnHrInicio.getText().toString().trim())){
                 toast = Toast.makeText(getApplicationContext(), "Informe a data e hora do início do uso do medicamento", Toast.LENGTH_LONG);
                 toast.show();
-                return false;
+
             }else {
                 Medicamento novoMedicamento = new Medicamento();
                 novoMedicamento.setUsuario(Usuario.getUsuarioInstance());
 
-                medicamentoImagem.setDrawingCacheEnabled(true);
-                medicamentoImagem.buildDrawingCache();
-                Bitmap imageMedicamentoBM = medicamentoImagem.getDrawingCache();
-                ByteArrayOutputStream stream = new ByteArrayOutputStream();
-                imageMedicamentoBM.compress(Bitmap.CompressFormat.PNG, 100, stream);
-                novoMedicamento.setImagem(stream.toByteArray());
+                try {
+                    medicamentoImagem.setDrawingCacheEnabled(true);
+                    medicamentoImagem.buildDrawingCache();
+                    Bitmap imageMedicamentoBM = medicamentoImagem.getDrawingCache();
+                    ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                    imageMedicamentoBM.compress(Bitmap.CompressFormat.PNG, 100, stream);
+                    novoMedicamento.setImagem(stream.toByteArray());
+
+                }catch(Exception e){
+                    e.printStackTrace();
+                }
 
                 novoMedicamento.setNome(nomeMedicamento.getText().toString().trim());
                 novoMedicamento.setDescricaoDoUso(medicamentoDescricaoUso.getText().toString().trim());
@@ -129,17 +135,20 @@ public class CadastroMedicamentoActivity extends AppCompatActivity{
                 SimpleDateFormat format = new SimpleDateFormat(pattern);
                 try {
                     novoMedicamento.setDtInicio(format.parse(dataInicioUsoMedicamento));
-
-                    MedicamentoDAO medicamentoDAO = new MedicamentoDAO(getApplicationContext());
-                    medicamentoDAO.insert(novoMedicamento);
-                    toast = Toast.makeText(getApplicationContext(), "Medicamento salvo com sucesso", Toast.LENGTH_LONG);
-                    toast.show();
-
-                    return true;
-
                 } catch (ParseException e) {
+                    novoMedicamento.setDtInicio(new Date());
                     e.printStackTrace();
                 }
+
+                MedicamentoDAO medicamentoDAO = new MedicamentoDAO(getApplicationContext());
+                medicamentoDAO.insert(novoMedicamento);
+                toast = Toast.makeText(getApplicationContext(), "Medicamento salvo com sucesso", Toast.LENGTH_LONG);
+                toast.show();
+
+                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                startActivity(intent);
+                finish();
+
             }
         }
 
@@ -153,6 +162,8 @@ public class CadastroMedicamentoActivity extends AppCompatActivity{
         if(requestCode == 0 && resultCode == RESULT_OK ) {
             Bitmap bp = (Bitmap) data.getExtras().get("data");
             ImageView imagemMedicamento = (ImageView)findViewById(R.id.medicamentoImagem);
+            imagemMedicamento.getLayoutParams().width = (int) getApplicationContext().getResources().getDimension(R.dimen.imageview_width);
+            imagemMedicamento.getLayoutParams().height = (int) getApplicationContext().getResources().getDimension(R.dimen.imageview_height);
             imagemMedicamento.setImageBitmap(bp);
         }
     }

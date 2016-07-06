@@ -7,15 +7,15 @@
 
     <ImageView
         android:id="@+id/imagemMedicamento"
-        android:layout_width="400dp"
-        android:layout_height="400dp"
+        android:layout_width="65dp"
+        android:layout_height="65dp"
         />
 
     <TextView
         android:id="@+id/nomeMedicamento"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginLeft="5sp"
+        android:layout_marginLeft="10dp"
         android:gravity="center_vertical"
         android:textColor="#FF000000"
         android:textSize="20sp"

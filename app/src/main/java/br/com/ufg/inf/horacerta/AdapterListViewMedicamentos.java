@@ -20,10 +20,16 @@ import model.Medicamento;
 public class AdapterListViewMedicamentos extends BaseAdapter{
     private LayoutInflater mInflater;
     private List<Medicamento> itens;
+    Context context;
 
     public AdapterListViewMedicamentos(Context context, List<Medicamento> itens) {
         this.itens = itens;
+        this.context = context;
         mInflater = LayoutInflater.from(context);
+    }
+
+    public Context getContext(){
+        return this.context;
     }
 
     @Override
@@ -67,11 +73,9 @@ public class AdapterListViewMedicamentos extends BaseAdapter{
         Medicamento item = itens.get(position);
         itemHolder.nome.setText(item.getNome());
         if(item.getImagem() == null) {
-            itemHolder.image.setImageResource(R.mipmap.ic_launcher);
+            itemHolder.image.setImageResource(R.drawable.ic_error_outline_black_48dp);
         }else{
             Bitmap bitmap = BitmapFactory.decodeByteArray(item.getImagem(), 0, item.getImagem().length);
-            itemHolder.image.getLayoutParams().height = 300;
-            itemHolder.image.getLayoutParams().width = 300;
             itemHolder.image.setImageBitmap(bitmap);
         }
 

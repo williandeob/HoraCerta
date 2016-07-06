@@ -133,16 +133,6 @@ public class MainActivity extends AppCompatActivity {
                 MedicamentoDAO medicamentoDAO = new MedicamentoDAO(getContext());
                 List<Medicamento>listaDeMedicamentos = medicamentoDAO.findAll();
 
-                /*List<Medicamento> listaDeMedicamentos = new ArrayList<Medicamento>();
-                Medicamento medicamento = new Medicamento();
-                medicamento.setUsuario(Usuario.getUsuarioInstance());
-                medicamento.setId((long) 1);
-                medicamento.setNome("Aradois");
-                medicamento.setDtInicio(new Date());
-                medicamento.setDescricaoDoUso("Tomar 01 comprimido com água");
-                medicamento.setIntervaloEmMinutos(120);
-                listaDeMedicamentos.add(medicamento);*/
-
                 ListView lv = (ListView)rootView.findViewById(R.id.listaDeMedicamentos);
                 lv.setAdapter(new AdapterListViewMedicamentos(getContext(), listaDeMedicamentos));
 
