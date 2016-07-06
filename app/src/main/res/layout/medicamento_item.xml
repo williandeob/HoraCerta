@@ -3,22 +3,40 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="horizontal"
-    android:padding="1dp">
+    android:paddingBottom="10sp"
+    android:paddingTop="10sp">
 
-    <ImageView
+    <customview.RoundedImageView
         android:id="@+id/imagemMedicamento"
-        android:layout_width="65dp"
-        android:layout_height="65dp"
+        android:layout_width="62dp"
+        android:layout_height="62dp"
+        android:gravity="center_vertical"
         />
 
-    <TextView
-        android:id="@+id/nomeMedicamento"
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginLeft="10dp"
-        android:gravity="center_vertical"
-        android:textColor="#FF000000"
-        android:textSize="20sp"
-        />
+        android:orientation="vertical"
+        android:gravity="center_vertical">
+
+        <TextView
+            android:id="@+id/nomeMedicamento"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp"
+            android:textColor="#FF000000"
+            android:fontFamily="sans-serif"
+            android:textSize="20sp"
+         />
+
+        <TextView
+            android:id="@+id/dtInicio"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp"
+            android:textColor="#FF000000"
+            android:fontFamily="sans-serif"
+            />
+    </LinearLayout>
 
 </LinearLayout>

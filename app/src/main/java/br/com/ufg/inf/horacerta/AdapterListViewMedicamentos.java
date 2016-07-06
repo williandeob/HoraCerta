@@ -3,15 +3,19 @@ package br.com.ufg.inf.horacerta;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
+import customview.RoundedImageView;
 import model.Medicamento;
 
 /**
@@ -59,7 +63,8 @@ public class AdapterListViewMedicamentos extends BaseAdapter{
             //inflar as mesmas informacoes
             itemHolder = new ItemSuporte();
             itemHolder.nome = ((TextView) convertView.findViewById(R.id.nomeMedicamento));
-            itemHolder.image = ((ImageView) convertView.findViewById(R.id.imagemMedicamento));
+            itemHolder.image = ((RoundedImageView) convertView.findViewById(R.id.imagemMedicamento));
+            itemHolder.dtInicio = ((TextView) convertView.findViewById(R.id.dtInicio));
 
             //define os itens na view;
             convertView.setTag(itemHolder);
@@ -72,8 +77,14 @@ public class AdapterListViewMedicamentos extends BaseAdapter{
         //e define os valores nos itens.
         Medicamento item = itens.get(position);
         itemHolder.nome.setText(item.getNome());
+
+        String parse = "dd/MM/yyyy HH:mm:ss";
+        SimpleDateFormat format = new SimpleDateFormat(parse);
+        itemHolder.dtInicio.setText("Início em: "+format.format(item.getDtInicio()));
+
         if(item.getImagem() == null) {
-            itemHolder.image.setImageResource(R.drawable.ic_error_outline_black_48dp);
+            Bitmap bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_photo);
+            itemHolder.image.setImageBitmap(bitmap);
         }else{
             Bitmap bitmap = BitmapFactory.decodeByteArray(item.getImagem(), 0, item.getImagem().length);
             itemHolder.image.setImageBitmap(bitmap);
@@ -88,7 +99,8 @@ public class AdapterListViewMedicamentos extends BaseAdapter{
      */
     private class ItemSuporte {
 
-        ImageView image;
+        RoundedImageView image;
         TextView nome;
+        TextView dtInicio;
     }
 }
