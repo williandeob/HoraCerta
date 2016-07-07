@@ -112,4 +112,43 @@ public class MedicamentoDAO  implements Persistencia<Medicamento>{
             return idReturn;
         }
     }
+
+    public List<Medicamento> findLimitData(String dateLimit) {
+        List<Medicamento> listaMedicamentosReturn = new ArrayList<Medicamento>();
+
+        String sql = "SELECT * FROM MEDICAMENTO WHERE DT_INICIO < 'dateLimit'";
+        Database schema = new Database(this.context);
+        SQLiteDatabase db = schema.getReadableDatabase();
+        Cursor cursor = db.rawQuery(sql, null);
+
+
+        try {
+
+            for (int i = 0; i < cursor.getCount(); i++) {
+                cursor.moveToPosition(i);
+                Medicamento medicamento = new Medicamento();
+                medicamento.setId(cursor.getLong(cursor.getColumnIndex("ID")));
+                medicamento.setNome(cursor.getString(cursor.getColumnIndex("NOME")));
+                medicamento.setImagem(cursor.getBlob(cursor.getColumnIndex("IMAGEM")));
+                medicamento.setDescricaoDoUso(cursor.getString(cursor.getColumnIndex("DESCRICAO_DO_USO")));
+                medicamento.setIntervaloEmMinutos(cursor.getInt(cursor.getColumnIndex("INTERVALO_EM_MINUTOS")));
+                medicamento.setUsuario(Usuario.getUsuarioInstance());
+
+                String dataString = cursor.getString(cursor.getColumnIndex("DT_INICIO"));
+                String pattern = "dd/MM/yyyy HH:mm:ss";
+                SimpleDateFormat format = new SimpleDateFormat(pattern);
+                Date date = null;
+                date = format.parse(dataString);
+
+                medicamento.setDtInicio(date);
+                listaMedicamentosReturn.add(medicamento);
+            }
+        }catch (ParseException e) {
+            e.printStackTrace();
+        }finally {
+            cursor.close();
+            db.close();
+            return listaMedicamentosReturn;
+        }
+    }
 }
