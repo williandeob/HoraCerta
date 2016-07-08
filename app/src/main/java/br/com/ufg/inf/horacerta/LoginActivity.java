@@ -380,9 +380,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                     break;
                 default: //sucesso
 
-                    toast = Toast.makeText(getApplicationContext(), responseRequest, Toast.LENGTH_LONG);
-                    toast.show();
-
                     try {
 
                         JSONObject object = new JSONObject(responseRequest);
