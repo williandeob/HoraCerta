@@ -4,10 +4,10 @@ package service;
  * Created by willian on 06/07/2016.
  */
 import android.app.AlarmManager;
-import android.app.Notification;
+
 import android.app.NotificationManager;
 import android.app.PendingIntent;
-import android.app.TaskStackBuilder;
+
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -15,11 +15,11 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
-import android.media.Ringtone;
+
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.PowerManager;
-import android.support.v4.app.NotificationCompat;
+import android.support.v7.app.NotificationCompat;
 import android.util.Log;
 
 import java.io.IOException;
@@ -27,7 +27,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
-import br.com.ufg.inf.horacerta.MainActivity;
+import br.com.ufg.inf.horacerta.LoginActivity;
 import br.com.ufg.inf.horacerta.R;
 import dao.MedicamentoDAO;
 import model.Medicamento;
@@ -73,48 +73,36 @@ public class Alarm extends BroadcastReceiver
     }
 
     private void alertUser(Context context, Medicamento medicamento) {
-        Bitmap bitmap = BitmapFactory.decodeByteArray(medicamento.getImagem(), 0, medicamento.getImagem().length);
-
-        NotificationCompat.Builder mBuilder =
-                new NotificationCompat.Builder(context)
-                        .setSmallIcon(R.drawable.ic_notifications_white_48dp)
-                        .setTicker("HoraCerta")
-                        .setContentTitle("HoraCerta Informa")
-                        .setContentText("Hora de tomar o medicamento "+medicamento.getNome()+"!")
-                        .setLargeIcon(bitmap)
-                        .setAutoCancel(true)
-                        //.setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM))
-                        .setDefaults(Notification.DEFAULT_LIGHTS)
-                        .setVibrate( new long[]{150, 300, 150, 600, 150, 300, 150, 600, 150, 300, 150, 600,
-                                                150, 300, 150, 600, 150, 300, 150, 600, 150, 300, 150, 600,
-                                                150, 300, 150, 600, 150, 300, 150, 600, 150, 300, 150, 600,
-                                                150, 300, 150, 600, 150, 300, 150, 600, 150, 300, 150, 600,
-                                                150, 300, 150, 600, 150, 300, 150, 600, 150, 300, 150, 600,
-                                                150, 300, 150, 600, 150, 300, 150, 600});
-
-
-        Intent resultIntent = new Intent(context, MainActivity.class);
-
-        TaskStackBuilder stackBuilder = TaskStackBuilder.create(context);
-        stackBuilder.addParentStack(MainActivity.class);
-        stackBuilder.addNextIntent(resultIntent);
-
-        PendingIntent resultPendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
-        mBuilder.setContentIntent(resultPendingIntent);
-
-        Notification notification =  mBuilder.build();
+        Bitmap bitmap;
+        try {
+            bitmap = BitmapFactory.decodeByteArray(medicamento.getImagem(), 0, medicamento.getImagem().length);
+        }catch (Exception e){
+            bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_photo);
+        }
 
         NotificationManager mNotificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-        mNotificationManager.notify(Integer.parseInt(""+medicamento.getId()), notification);
-        //playSound(context, RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM) );
+        PendingIntent resultPendingIntent = PendingIntent.getActivity(context, 0, new Intent(context, LoginActivity.class),0);
 
-       try{
-            Uri som = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
-            Ringtone toque = RingtoneManager.getRingtone(context, som);
-            toque.play();
-        }catch(Exception e){
+        NotificationCompat.Builder mBuilder =
+                (NotificationCompat.Builder) new NotificationCompat.Builder(context)
+                        .setSmallIcon(R.drawable.ic_notifications_white_48dp)
+                        .setLargeIcon(bitmap)
+                        .setTicker("Notificação HoraCerta")
+                        .setContentTitle("HoraCerta informa")
+                        .setContentText("Tomar o medicamento "+medicamento.getNome()+"!")
+                        .setContentIntent(resultPendingIntent)
+                        .setOngoing(true)
+                        .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM))
+                        .setVibrate( new long[]{150, 300, 150, 600, 150, 300, 150, 600, 150, 300, 150, 600,
+                                150, 300, 150, 600, 150, 300, 150, 600, 150, 300, 150, 600,
+                                150, 300, 150, 600, 150, 300, 150, 600, 150, 300, 150, 600,
+                                150, 300, 150, 600, 150, 300, 150, 600, 150, 300, 150, 600,
+                                150, 300, 150, 600, 150, 300, 150, 600, 150, 300, 150, 600,
+                                150, 300, 150, 600, 150, 300, 150, 600})
+                        .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM))
+                        .setAutoCancel(true);
 
-        }
+        mNotificationManager.notify(Integer.parseInt(""+medicamento.getId()), mBuilder.build());
 
     }
 
