@@ -31,15 +31,20 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
+import dao.MedicamentoDAO;
 import dao.Persistencia;
 import dao.UsuarioDAO;
+import model.Medicamento;
 import model.Usuario;
 import util.UtilConnection;
 
@@ -393,10 +398,30 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                         usuario.setUserName(objectResponse.getString("username"));
                         usuarioDAO.insert(usuario);
 
+                        JSONArray medicamentosJson = objectResponse.getJSONArray("medicamentos");
+                        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+                        MedicamentoDAO medicamentoDAO = new MedicamentoDAO(getApplicationContext());
+
+                        for(int i =0; i<medicamentosJson.length(); i++ ){
+                            JSONObject medicamentoResponse = new JSONObject(medicamentosJson.get(i).toString());
+                            Medicamento medicamento = new Medicamento();
+                            medicamento.setId(medicamentoResponse.getLong("id"));
+                            medicamento.setNome(medicamentoResponse.getString("nome"));
+                            medicamento.setDtInicio(dateFormat.parse(medicamentoResponse.getString("dataInicio")));
+                            medicamento.setIntervaloEmMinutos(medicamentoResponse.getInt("intervalo"));
+                            medicamento.setImagem(null);
+                            medicamento.setDescricaoDoUso(medicamentoResponse.getString("descricao"));
+                            medicamento.setUsuario(Usuario.getUsuarioInstance());
+                            medicamentoDAO.insert(medicamento);
+                        }
+
                         Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                         startActivity(intent);
                         finish();
+
                     } catch (JSONException e) {
+                        e.printStackTrace();
+                    } catch (ParseException e) {
                         e.printStackTrace();
                     }
 

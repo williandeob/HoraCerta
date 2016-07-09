@@ -42,7 +42,7 @@ public class Alarm extends BroadcastReceiver
         wl.acquire();
 
         MedicamentoDAO medicamentoDAO = new MedicamentoDAO(context);
-        SimpleDateFormat parse = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+        SimpleDateFormat parse = new SimpleDateFormat("dd/MM/yyyy HH:mm");
         Date data = new Date();
         List<Medicamento> listaDeMedicamentos = medicamentoDAO.findLimitData(parse.format(data));
         separaMEdicamentosParaAlerta(context, listaDeMedicamentos, data);

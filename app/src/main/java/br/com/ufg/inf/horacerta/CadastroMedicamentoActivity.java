@@ -130,8 +130,8 @@ public class CadastroMedicamentoActivity extends AppCompatActivity{
                 novoMedicamento.setDescricaoDoUso(medicamentoDescricaoUso.getText().toString().trim());
                 novoMedicamento.setIntervaloEmMinutos(Integer.parseInt(intervalo.getText().toString().trim()));
 
-                String dataInicioUsoMedicamento = btnDtInicio.getText().toString().trim()+" "+btnHrInicio.getText().toString().trim()+":00";
-                String pattern = "dd/MM/yyyy HH:mm:ss";
+                String dataInicioUsoMedicamento = btnDtInicio.getText().toString().trim()+" "+btnHrInicio.getText().toString().trim();
+                String pattern = "dd/MM/yyyy HH:mm";
                 SimpleDateFormat format = new SimpleDateFormat(pattern);
                 try {
                     novoMedicamento.setDtInicio(format.parse(dataInicioUsoMedicamento));

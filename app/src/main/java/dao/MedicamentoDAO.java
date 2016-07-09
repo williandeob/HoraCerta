@@ -27,7 +27,7 @@ public class MedicamentoDAO  implements Persistencia<Medicamento>{
 
     @Override
     public void insert(Medicamento object) {
-        String pattern = "dd/MM/yyyy HH:mm:ss";
+        String pattern = "dd/MM/yyyy HH:mm";
         SimpleDateFormat format = new SimpleDateFormat(pattern);
 
         Database schema = new Database(this.context);
@@ -78,7 +78,7 @@ public class MedicamentoDAO  implements Persistencia<Medicamento>{
                     medicamento.setUsuario(Usuario.getUsuarioInstance());
 
                     String dataString = cursor.getString(cursor.getColumnIndex("DT_INICIO"));
-                    String pattern = "dd/MM/yyyy HH:mm:ss";
+                    String pattern = "dd/MM/yyyy HH:mm";
                     SimpleDateFormat format = new SimpleDateFormat(pattern);
                     Date date = null;
                     date = format.parse(dataString);
@@ -135,7 +135,7 @@ public class MedicamentoDAO  implements Persistencia<Medicamento>{
                 medicamento.setUsuario(Usuario.getUsuarioInstance());
 
                 String dataString = cursor.getString(cursor.getColumnIndex("DT_INICIO"));
-                String pattern = "dd/MM/yyyy HH:mm:ss";
+                String pattern = "dd/MM/yyyy HH:mm";
                 SimpleDateFormat format = new SimpleDateFormat(pattern);
                 Date date = null;
                 date = format.parse(dataString);
