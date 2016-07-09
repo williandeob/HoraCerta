@@ -192,7 +192,7 @@ public class RegisterActivity extends AppCompatActivity {
                 jsonObject.put("email" ,mEmail);
                 jsonObject.put("password" ,mPassword);
 
-                responseRequest = UtilConnection.buildRequest("usuario", "POST", jsonObject, getApplicationContext());
+                responseRequest = UtilConnection.buildRequest("loginService", "POST", jsonObject, getApplicationContext());
             }catch (IOException ex){
                 responseRequest = "errorException";
             } catch (JSONException e) {

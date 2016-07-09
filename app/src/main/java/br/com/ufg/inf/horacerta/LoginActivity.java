@@ -398,21 +398,23 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                         usuario.setUserName(objectResponse.getString("username"));
                         usuarioDAO.insert(usuario);
 
-                        JSONArray medicamentosJson = objectResponse.getJSONArray("medicamentos");
-                        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm");
-                        MedicamentoDAO medicamentoDAO = new MedicamentoDAO(getApplicationContext());
+                        if(responseRequest.contains("medicamentos")) {
+                            JSONArray medicamentosJson = objectResponse.getJSONArray("medicamentos");
+                            SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+                            MedicamentoDAO medicamentoDAO = new MedicamentoDAO(getApplicationContext());
 
-                        for(int i =0; i<medicamentosJson.length(); i++ ){
-                            JSONObject medicamentoResponse = new JSONObject(medicamentosJson.get(i).toString());
-                            Medicamento medicamento = new Medicamento();
-                            medicamento.setId(medicamentoResponse.getLong("id"));
-                            medicamento.setNome(medicamentoResponse.getString("nome"));
-                            medicamento.setDtInicio(dateFormat.parse(medicamentoResponse.getString("dataInicio")));
-                            medicamento.setIntervaloEmMinutos(medicamentoResponse.getInt("intervalo"));
-                            medicamento.setImagem(null);
-                            medicamento.setDescricaoDoUso(medicamentoResponse.getString("descricao"));
-                            medicamento.setUsuario(Usuario.getUsuarioInstance());
-                            medicamentoDAO.insert(medicamento);
+                            for (int i = 0; i < medicamentosJson.length(); i++) {
+                                JSONObject medicamentoResponse = new JSONObject(medicamentosJson.get(i).toString());
+                                Medicamento medicamento = new Medicamento();
+                                medicamento.setId(medicamentoResponse.getLong("id"));
+                                medicamento.setNome(medicamentoResponse.getString("nome"));
+                                medicamento.setDtInicio(dateFormat.parse(medicamentoResponse.getString("dataInicio")));
+                                medicamento.setIntervaloEmMinutos(medicamentoResponse.getInt("intervalo"));
+                                medicamento.setImagem(null);
+                                medicamento.setDescricaoDoUso(medicamentoResponse.getString("descricao"));
+                                medicamento.setUsuario(Usuario.getUsuarioInstance());
+                                medicamentoDAO.insert(medicamento);
+                            }
                         }
 
                         Intent intent = new Intent(getApplicationContext(), MainActivity.class);
