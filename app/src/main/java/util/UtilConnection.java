@@ -6,6 +6,7 @@ import android.net.NetworkInfo;
 import android.util.Log;
 
 import org.apache.http.NameValuePair;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
@@ -28,6 +29,7 @@ import java.util.List;
 
 public class UtilConnection {
     private static String pathApplicationRequest = "http://ec2-54-233-118-201.sa-east-1.compute.amazonaws.com/SlumServer/slum/";
+    //private static String pathApplicationRequest = "http://localhost:8080/SlumServer/slum/";
 
     private static boolean isInternetAvalaible(Context context) {
         ConnectivityManager connMgr = (ConnectivityManager)
@@ -74,14 +76,13 @@ public class UtilConnection {
         return result.toString();
     }
 
-    public static String buildRequest(String urlResource, String metodo, JSONObject parametros, Context context) throws IOException {
+    public static String buildRequest(String urlResource, String metodo, JSONObject parametros, Context context) throws IOException, JSONException {
         /*
         Verifica se o device está conectado a rede
          */
         if (!isInternetAvalaible(context)) {
             return "errorConnection";
         }
-
 
         URL url = new URL(pathApplicationRequest + urlResource);
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
@@ -92,13 +93,16 @@ public class UtilConnection {
             conn.setConnectTimeout(30000 /* milliseconds */);
             conn.setRequestMethod(metodo);
             conn.setDoInput(true);
-            conn.setDoOutput(true);/* define if have data to posting*/
-            conn.setRequestProperty("Content-Type", "application/json");
             conn.setRequestProperty( "Accept", "*/*" );
+            conn.setRequestProperty("Content-Type", "application/json");
+
             if("GET".equals(metodo)){
+                conn.setRequestProperty("Authorization", parametros.getString("token"));
+                conn.setRequestProperty("login", parametros.getString("username"));
 
             }else {
 
+                conn.setDoOutput(true);/* define if have data to posting*/
                 OutputStream os = conn.getOutputStream();
                 BufferedWriter writer = new BufferedWriter(
                         new OutputStreamWriter(os, "UTF-8"));

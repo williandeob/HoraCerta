@@ -15,6 +15,7 @@
     <string name="permission_rationale">"Contacts permissions are needed for providing email
         completions."
     </string>
+    <string name="error_login">Não foi possivel autentica o usuário</string>
     <string name="esqueceu_a_senha">Esqueceu a senha?</string>
     <string name="criar_um_nova_conta_no_horacerta">Criar um nova conta no HoraCerta</string>
     <string name="title_activity_main">MainActivity</string>

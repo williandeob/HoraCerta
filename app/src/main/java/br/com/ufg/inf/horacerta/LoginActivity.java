@@ -341,6 +341,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 jsonObject.put("password", mPassword);
 
                 responseRequest = UtilConnection.buildRequest("loginService/logar", "POST", jsonObject, getApplicationContext());
+
             }catch (IOException ex){
                 responseRequest = "errorException";
             } catch (JSONException e) {
@@ -348,7 +349,11 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 responseRequest = "errorException";
             }
 
-            return responseRequest;
+            if(responseRequest.contains("error")){
+                return responseRequest;
+            }else{
+                return getUser(responseRequest);
+            }
         }
 
         @Override
@@ -364,7 +369,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                     break;
                 case "errorAutenticacao" :
                     //TODO implementar saída para usuario inválido
-                    mPasswordView.setError(getString(R.string.error_incorrect_password));
+                    mPasswordView.setError(getString(R.string.error_login));
                     mPasswordView.requestFocus();
                     break;
                 case "errorResponse":
@@ -377,26 +382,42 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 default: //sucesso
 
                     try {
-
-                        JSONObject object = new JSONObject(responseRequest);
+                        JSONObject objectResponse = new JSONObject(responseRequest);
                         Persistencia usuarioDAO = new UsuarioDAO(getApplicationContext());
 
                         Usuario usuario = Usuario.getUsuarioInstance();
-                        usuario.setId(object.getJSONObject("usuario").getLong("id"));
-                        usuario.setNome(object.getJSONObject("usuario").getString("nome"));
-                        usuario.setEmail(object.getJSONObject("usuario").getString("email"));
-                        usuario.setUserName(this.mUserName);
-                        usuario.setPassword(this.mPassword);
+                        usuario.setPassword(objectResponse.getString("password"));
+                        usuario.setNome(objectResponse.getString("nome"));
+                        usuario.setId(objectResponse.getLong("id"));
+                        usuario.setEmail(objectResponse.getString("email"));
+                        usuario.setUserName(objectResponse.getString("username"));
                         usuarioDAO.insert(usuario);
 
                         Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                         startActivity(intent);
                         finish();
-                        break;
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
+
             }
+        }
+
+        private String getUser(String autenticacaoResponse){
+            String responseRequest;
+            JSONObject objectRequest;
+            try {
+                objectRequest = new JSONObject(autenticacaoResponse);
+                responseRequest = UtilConnection.buildRequest("usuario/"+objectRequest.getString("username"), "GET", objectRequest, getApplicationContext());
+            } catch (JSONException e) {
+                e.printStackTrace();
+                responseRequest = "errorException";
+            } catch (IOException e) {
+                e.printStackTrace();
+                responseRequest = "errorException";
+            }
+
+            return responseRequest;
         }
 
         @Override

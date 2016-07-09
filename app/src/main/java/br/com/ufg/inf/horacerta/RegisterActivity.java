@@ -214,9 +214,8 @@ public class RegisterActivity extends AppCompatActivity {
                     toast.show();
                     break;
                 case "errorAutenticacao" :
-                    //TODO implementar saída para usuario inválido
-                    mPasswordView.setError(getString(R.string.error_incorrect_password));
-                    mPasswordView.requestFocus();
+                    toast = Toast.makeText(getApplicationContext(), "Não foi possivel cadastrar usuario!", Toast.LENGTH_LONG);
+                    toast.show();
                     break;
                 case "errorResponse":
                     //TODO implementar saída para codigo de resposta diferente de 200 e 401

@@ -91,6 +91,7 @@ public class Alarm extends BroadcastReceiver
                         .setContentTitle("HoraCerta informa")
                         .setContentText("Tomar o medicamento "+medicamento.getNome()+"!")
                         .setContentIntent(resultPendingIntent)
+                        .setFullScreenIntent(resultPendingIntent, true)
                         .setOngoing(true)
                         .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM))
                         .setVibrate( new long[]{150, 300, 150, 600, 150, 300, 150, 600, 150, 300, 150, 600,
