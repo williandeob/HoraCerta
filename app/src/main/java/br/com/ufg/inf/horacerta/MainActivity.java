@@ -26,6 +26,7 @@ import dao.MedicamentoDAO;
 import model.Medicamento;
 import model.Usuario;
 import service.AlarmService;
+import util.UtilService;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -49,7 +50,9 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        startService(new Intent(this, AlarmService.class));
+        if(!UtilService.isServiceRunning(AlarmService.class.getName(),getApplicationContext())){
+            startService(new Intent(this, AlarmService.class));
+        }
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
