@@ -1,6 +1,7 @@
 package br.com.ufg.inf.horacerta;
 
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
 import android.support.design.widget.TabLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
@@ -25,6 +26,7 @@ import java.util.List;
 import dao.MedicamentoDAO;
 import model.Medicamento;
 import model.Usuario;
+import schema.Database;
 import service.AlarmService;
 import util.UtilService;
 
@@ -66,16 +68,6 @@ public class MainActivity extends AppCompatActivity {
 
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(mViewPager);
-
-        FloatingActionButton fabNovoMedicamento = (FloatingActionButton) findViewById(R.id.fabNovoMedicamento);
-        fabNovoMedicamento.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(getApplicationContext(), CadastroMedicamentoActivity.class);
-                startActivity(intent);
-            }
-        });
-
     }
 
 
@@ -140,12 +132,42 @@ public class MainActivity extends AppCompatActivity {
                 ListView lv = (ListView)rootView.findViewById(R.id.listaDeMedicamentos);
                 lv.setAdapter(new AdapterListViewMedicamentos(getContext(), listaDeMedicamentos));
 
+                FloatingActionButton fabNovoMedicamento = (FloatingActionButton) rootView.findViewById(R.id.fabNovoMedicamento);
+                fabNovoMedicamento.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Intent intent = new Intent(getContext(), CadastroMedicamentoActivity.class);
+                        startActivity(intent);
+                    }
+                });
+
             }else{
                 rootView = inflater.inflate(R.layout.fragment_user, container, false);
                 TextView nameUser = (TextView) rootView.findViewById(R.id.name_user);
                 nameUser.setText(Usuario.getUsuarioInstance().getNome());
                 TextView emailUser = (TextView) rootView.findViewById(R.id.email_user);
                 emailUser.setText(Usuario.getUsuarioInstance().getEmail());
+
+                FloatingActionButton fabNovoMedicamento = (FloatingActionButton) rootView.findViewById(R.id.logout);
+                fabNovoMedicamento.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Database schema = new Database(getContext());
+                        SQLiteDatabase db = schema.getWritableDatabase();
+
+                        try {
+                            db.delete("MEDICAMENTO", null, null);
+                            db.delete("USUARIO", null, null);
+                            Usuario.cleanInstance();
+
+                            Intent intent = new Intent(getContext(), LoginActivity.class);
+                            startActivity(intent);
+                            getActivity().finish();
+                        }finally {
+                            db.close();
+                        }
+                    }
+                });
             }
 
             return rootView;

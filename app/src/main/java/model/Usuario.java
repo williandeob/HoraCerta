@@ -64,4 +64,14 @@ public class Usuario {
     public void setPassword(String password) {
         this.password = password;
     }
+
+    public static void cleanInstance() {
+        Usuario usuario = getUsuarioInstance();
+        usuario.setId(null);
+        usuario.setPassword(null);
+        usuario.setEmail(null);
+        usuario.setNome(null);
+        usuario.setUserName(null);
+
+    }
 }
