@@ -29,6 +29,7 @@ import java.util.List;
 
 import br.com.ufg.inf.horacerta.LoginActivity;
 import br.com.ufg.inf.horacerta.R;
+import br.com.ufg.inf.horacerta.ShowMedicamentoActivity;
 import dao.MedicamentoDAO;
 import model.Medicamento;
 
@@ -81,7 +82,9 @@ public class Alarm extends BroadcastReceiver
         }
 
         NotificationManager mNotificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-        PendingIntent resultPendingIntent = PendingIntent.getActivity(context, 0, new Intent(context, LoginActivity.class),0);
+        Intent showMedicamentoIntent = new Intent(context, ShowMedicamentoActivity.class);
+        PendingIntent showMedicamentoPendingIntent = PendingIntent.getActivity(context, 1, showMedicamentoIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent resultPendingIntent = PendingIntent.getActivity(context, 0, new Intent(context, LoginActivity.class), PendingIntent.FLAG_UPDATE_CURRENT);
 
         NotificationCompat.Builder mBuilder =
                 (NotificationCompat.Builder) new NotificationCompat.Builder(context)
@@ -91,7 +94,7 @@ public class Alarm extends BroadcastReceiver
                         .setContentTitle("HoraCerta informa")
                         .setContentText("Tomar o medicamento "+medicamento.getNome()+"!")
                         .setContentIntent(resultPendingIntent)
-                        .setFullScreenIntent(resultPendingIntent, true)
+                        .setFullScreenIntent(showMedicamentoPendingIntent, true)
                         .setOngoing(true)
                         .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM))
                         .setVibrate( new long[]{150, 300, 150, 600, 150, 300, 150, 600, 150, 300, 150, 600,
