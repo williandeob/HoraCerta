@@ -27,14 +27,13 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
-import br.com.ufg.inf.horacerta.LoginActivity;
+import br.com.ufg.inf.horacerta.AlarmeActivity;
 import br.com.ufg.inf.horacerta.R;
-import br.com.ufg.inf.horacerta.ShowMedicamentoActivity;
 import dao.MedicamentoDAO;
 import model.Medicamento;
 
-public class Alarm extends BroadcastReceiver
-{
+public class Alarm extends BroadcastReceiver {
+
     @Override
     public void onReceive(Context context, Intent intent)
     {
@@ -46,13 +45,13 @@ public class Alarm extends BroadcastReceiver
         SimpleDateFormat parse = new SimpleDateFormat("dd/MM/yyyy HH:mm");
         Date data = new Date();
         List<Medicamento> listaDeMedicamentos = medicamentoDAO.findLimitData(parse.format(data));
-        separaMEdicamentosParaAlerta(context, listaDeMedicamentos, data);
+        separaMedicamentosParaAlerta(context, listaDeMedicamentos, data);
 
 
         wl.release();
     }
 
-    private void separaMEdicamentosParaAlerta(Context context, List<Medicamento> listaDeMedicamentos, Date data){
+    private void separaMedicamentosParaAlerta(Context context, List<Medicamento> listaDeMedicamentos, Date data){
         for (Medicamento medicamento : listaDeMedicamentos){
             if(isTime(context, medicamento.getDtInicio(), data, medicamento.getIntervaloEmMinutos())){
                 alertUser(context, medicamento);
@@ -74,7 +73,9 @@ public class Alarm extends BroadcastReceiver
     }
 
     private void alertUser(Context context, Medicamento medicamento) {
+
         Bitmap bitmap;
+
         try {
             bitmap = BitmapFactory.decodeByteArray(medicamento.getImagem(), 0, medicamento.getImagem().length);
         }catch (Exception e){
@@ -82,9 +83,10 @@ public class Alarm extends BroadcastReceiver
         }
 
         NotificationManager mNotificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-        Intent showMedicamentoIntent = new Intent(context, ShowMedicamentoActivity.class);
-        PendingIntent showMedicamentoPendingIntent = PendingIntent.getActivity(context, 1, showMedicamentoIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-        PendingIntent resultPendingIntent = PendingIntent.getActivity(context, 0, new Intent(context, LoginActivity.class), PendingIntent.FLAG_UPDATE_CURRENT);
+
+        Intent showMedicamentoIntent = new Intent(context, AlarmeActivity.class);
+        showMedicamentoIntent.putExtra("id", medicamento.getId()+"");
+        PendingIntent showMedicamentoPendingIntent = PendingIntent.getActivity(context, 0, showMedicamentoIntent, PendingIntent.FLAG_CANCEL_CURRENT);
 
         NotificationCompat.Builder mBuilder =
                 (NotificationCompat.Builder) new NotificationCompat.Builder(context)
@@ -93,7 +95,6 @@ public class Alarm extends BroadcastReceiver
                         .setTicker("Notificação HoraCerta")
                         .setContentTitle("HoraCerta informa")
                         .setContentText("Tomar o medicamento "+medicamento.getNome()+"!")
-                        .setContentIntent(resultPendingIntent)
                         .setFullScreenIntent(showMedicamentoPendingIntent, true)
                         .setOngoing(true)
                         .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM))
@@ -102,9 +103,7 @@ public class Alarm extends BroadcastReceiver
                                 150, 300, 150, 600, 150, 300, 150, 600, 150, 300, 150, 600,
                                 150, 300, 150, 600, 150, 300, 150, 600, 150, 300, 150, 600,
                                 150, 300, 150, 600, 150, 300, 150, 600, 150, 300, 150, 600,
-                                150, 300, 150, 600, 150, 300, 150, 600})
-                        .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM))
-                        .setAutoCancel(true);
+                                150, 300, 150, 600, 150, 300, 150, 600});
 
         mNotificationManager.notify(Integer.parseInt(""+medicamento.getId()), mBuilder.build());
 

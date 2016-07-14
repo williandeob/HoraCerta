@@ -123,6 +123,7 @@ public class CadastroMedicamentoActivity extends AppCompatActivity{
                     novoMedicamento.setImagem(stream.toByteArray());
 
                 }catch(Exception e){
+                    //Exception ocorre pois usuário não a foto do medicamento, cadastro prossegue normalmente...
                     e.printStackTrace();
                 }
 

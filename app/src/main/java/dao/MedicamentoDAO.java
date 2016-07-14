@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.support.v7.view.menu.MenuWrapperFactory;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -150,5 +151,31 @@ public class MedicamentoDAO  implements Persistencia<Medicamento>{
             db.close();
             return listaMedicamentosReturn;
         }
+    }
+
+    public Medicamento findById(String id) {
+        Medicamento medicamento = null;
+        String sql = "SELECT * FROM MEDICAMENTO WHERE ID = "+id;
+        Database schema = new Database(this.context);
+        SQLiteDatabase db = schema.getReadableDatabase();
+        Cursor cursor = db.rawQuery(sql, null);
+
+        try {
+            if (cursor.getCount() > 0) {
+                cursor.moveToFirst();
+                medicamento = new Medicamento();
+                medicamento.setId(cursor.getLong(cursor.getColumnIndex("ID")));
+                medicamento.setNome(cursor.getString(cursor.getColumnIndex("NOME")));
+                medicamento.setImagem(cursor.getBlob(cursor.getColumnIndex("IMAGEM")));
+                medicamento.setDescricaoDoUso(cursor.getString(cursor.getColumnIndex("DESCRICAO_DO_USO")));
+                medicamento.setIntervaloEmMinutos(cursor.getInt(cursor.getColumnIndex("INTERVALO_EM_MINUTOS")));
+                medicamento.setUsuario(Usuario.getUsuarioInstance());
+            }
+        }finally {
+            cursor.close();
+            db.close();
+            return medicamento;
+        }
+
     }
 }

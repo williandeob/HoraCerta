@@ -70,7 +70,7 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="br.com.ufg.inf.horacerta.MainActivity" />
         </activity>
-        <activity android:name=".ShowMedicamentoActivity"></activity>
+        <activity android:name=".AlarmeActivity"></activity>
     </application>
 
 </manifest>
