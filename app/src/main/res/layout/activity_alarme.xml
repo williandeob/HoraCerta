@@ -14,6 +14,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
+        android:textColor="#FF000000"
+        android:fontFamily="sans-serif"
+        android:textSize="30sp"
         android:text="Nome"
          />
 
@@ -24,7 +27,21 @@
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:text="Descrição do uso"
-        android:layout_below="@+id/nomeMedicamentoAlarme"/>
+        android:layout_below="@+id/nomeMedicamentoAlarme"
+        android:textColor="#FF000000"
+        android:fontFamily="sans-serif"
+        android:textSize="15sp"
+        />
+
+    <ImageView
+        android:id="@+id/medicamentoImagemAlarme"
+        android:layout_width="250dp"
+        android:layout_height="350dp"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:layout_margin="@dimen/fab_margin"
+        android:layout_below="@+id/descricaoMedicamentoAlarme"
+        />
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fabPausarNotificacao"
