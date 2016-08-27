@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">HoraCerta</string>
+    <string name="app_name">2WAR HoraCerta</string>
 
     <!-- Strings related to login -->
     <string name="prompt_email">Email</string>

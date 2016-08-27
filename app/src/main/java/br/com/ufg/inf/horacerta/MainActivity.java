@@ -148,8 +148,8 @@ public class MainActivity extends AppCompatActivity {
                 TextView emailUser = (TextView) rootView.findViewById(R.id.email_user);
                 emailUser.setText(Usuario.getUsuarioInstance().getEmail());
 
-                FloatingActionButton fabNovoMedicamento = (FloatingActionButton) rootView.findViewById(R.id.logout);
-                fabNovoMedicamento.setOnClickListener(new View.OnClickListener() {
+                FloatingActionButton fabLogout = (FloatingActionButton) rootView.findViewById(R.id.logout);
+                fabLogout.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         Database schema = new Database(getContext());
